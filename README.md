@@ -13,6 +13,9 @@ Investigate the evolution over the last decade of median housing prices across N
 - Exploratory Analysis: Uncover trends and outliers in the data.
 - Time Series Analysis: Study the trajectory of housing prices over time.
 
+### Libraries used
+- Chart.js
+- 
 ### Logic
 File: index.html
 Sets up the basic structure of the webpage.
