@@ -48,4 +48,4 @@ Explore Results: View interactive visualizations and maps.
 
 ### Credits
 Dataset: https://www.zillow.com/research/data/
-Class recordings and study materials, peer discussions
+Class recordings and study materials, peer discussions, stackoverflow
