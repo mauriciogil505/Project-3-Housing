@@ -12,7 +12,12 @@ Investigate the evolution over the last decade of median housing prices across N
 - Data Cleaning: Ensure data accuracy and consistency.
 - Exploratory Analysis: Uncover trends and outliers in the data.
 - Time Series Analysis: Study the trajectory of housing prices over time.
-
+### Styling of html
+- Flexbox used to center bar graph and back buton and align text up and to the left
+- 
+### Libraries used
+- Chart.js
+- 
 ### Logic
 File: index.html
 Sets up the basic structure of the webpage.
