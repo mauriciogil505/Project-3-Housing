@@ -1,5 +1,6 @@
 // Read in JSON
 const url = "https://raw.githubusercontent.com/GeeksGhost/NC_Housing_Project/main/housing.json";
+const tenYearDataUrl = "https://raw.githubusercontent.com/GeeksGhost/NC_Housing_Project/main/ten_year_data.json";
 
 // Create the tile layers
 let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -57,26 +58,33 @@ legend.onAdd = function () {
 // Add the legend to the map
 legend.addTo(map);
 
-// Fetch and process the JSON data
-fetch(url)
+// Fetch and process the ten year JSON data
+fetch(tenYearDataUrl)
     .then(response => response.json())
     .then(data => {
-        console.log(data); // Debugging statement to check data structure
-
         data.forEach(item => {
-            console.log(item); // Check each item in the data
-
-            if (item.latitude && item.longitude && item.dates) {
+            if (item.latitude && item.longitude) {
                 // Find the date with the highest price
-                let maxPriceDate = Object.keys(item.dates).reduce((max, date) => 
-                    item.dates[date] > item.dates[max] ? date : max, Object.keys(item.dates)[0]
+                let maxPriceDate = Object.keys(item).filter(key => key.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)).reduce((max, date) => 
+                    parseFloat(item[date]) > parseFloat(item[max]) ? date : max, Object.keys(item).filter(key => key.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/))[0]
                 );
                 
-                let maxPrice = item.dates[maxPriceDate];
+                let maxPrice = parseFloat(item[maxPriceDate]);
+
+                // Calculate the lowest and median prices
+                let prices = Object.keys(item).filter(key => key.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)).map(date => parseFloat(item[date])).sort((a, b) => a - b);
+                let minPrice = prices[0];
+                let medianPrice = prices[Math.floor(prices.length / 2)];
 
                 // Determine marker color based on the highest price
                 let color = getColor(maxPrice);
-                
+
+                // Prepare historical price data for the line graph
+                let priceData = {};
+                Object.keys(item).filter(key => key.match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)).forEach(date => {
+                    priceData[date] = parseFloat(item[date]);
+                });
+
                 // Create a circle marker with the determined color
                 let marker = L.circleMarker([item.latitude, item.longitude], {
                     color: color,
@@ -87,7 +95,7 @@ fetch(url)
                 .bindPopup(`
                     <b>${item.RegionName}</b><br>${item.StateName}<br>
                     Highest Price: $${maxPrice}<br>Date: ${maxPriceDate}<br>
-                    <button onclick="window.open('https://example.com/more-info/${item.RegionID}', '_blank')">More Information</button>
+                    <button onclick="window.open('info.html?regionName=${item.RegionName}&stateName=${item.StateName}&maxPrice=${maxPrice}&minPrice=${minPrice}&medianPrice=${medianPrice}&maxPriceDate=${maxPriceDate}&minPriceDate=${item[Object.keys(item).filter(key => parseFloat(item[key]) === minPrice)[0]]}&medianPriceDate=${item[Object.keys(item).filter(key => parseFloat(item[key]) === medianPrice)[0]]}&priceData=${encodeURIComponent(JSON.stringify(priceData))}', '_blank')">More Information</button>
                 `)
                 .on('click', function (e) {
                     this.openPopup();

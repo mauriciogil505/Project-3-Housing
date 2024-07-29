@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>County Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .info {
+            text-align: left; /* Align text to the left for information */
+            margin-bottom: 20px; /* Space between text and chart */
+        }
+        canvas {
+            margin-bottom: 20px;
+            max-width: 100%; /* Make the canvas responsive */
+            height: 400px; /* Fixed height for the bar graph */
+        }
+        #backButton {
+            display: block;
+            width: 25%; /* Fixed width as a quarter of the canvas width */
+            max-width: 200px; /* Maximum width for large screens */
+            padding: 10px 0;
+            background-color: #007BFF;
+            color: white;
+            text-align: center; /* Center text inside the button */
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-left: auto; /* Center button horizontally within its parent container */
+            margin-right: auto;
+        }
+        #backButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>County Information</h1>
+        <div class="info">
+            <p id="countyInfo"></p>
+            <p id="priceInfo"></p>
+            <p id="dateInfo"></p>
+        </div>
+        <canvas id="priceChart"></canvas>
+        <a id="backButton" href="index.html">Back</a>
+    </div>
+    <script>
+        // Parse URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const regionName = params.get('regionName');
+        const stateName = params.get('stateName');
+        const maxPrice = parseFloat(params.get('maxPrice'));
+        const minPrice = parseFloat(params.get('minPrice'));
+        const medianPrice = parseFloat(params.get('medianPrice'));
+        const maxPriceDate = params.get('maxPriceDate');
+
+        // Display the information
+        document.getElementById('countyInfo').innerText = `Region: ${regionName}, ${stateName}`;
+        document.getElementById('priceInfo').innerText = `Highest Price: $${maxPrice.toFixed(2)}\nLowest Price: $${minPrice.toFixed(2)}\nMedian Price: $${medianPrice.toFixed(2)}`;
+        document.getElementById('dateInfo').innerText = `Date of Highest Price: ${maxPriceDate}`;
+
+        // Create a bar chart
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const priceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Highest Price', 'Lowest Price', 'Median Price'],
+                datasets: [{
+                    label: 'House Prices',
+                    data: [maxPrice, minPrice, medianPrice],
+                    backgroundColor: ['#FF8C00', '#228B22', '#6A5ACD'],
+                    borderColor: ['#FF8C00', '#228B22', '#6A5ACD'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Math.max(maxPrice, minPrice, medianPrice) * 1.2
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
