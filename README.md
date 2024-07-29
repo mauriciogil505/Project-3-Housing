@@ -17,7 +17,8 @@ Investigate the evolution over the last decade of median housing prices across N
 - 
 ### Libraries used
 - Chart.js
-- 
+- leaflet
+- Python libraries like pandas, requests, pymongo to clean up the data to print out the json we used
 ### Logic
 File: index.html
 Sets up the basic structure of the webpage.
