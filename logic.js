@@ -91,6 +91,14 @@ fetch(url)
                 `)
                 .on('click', function (e) {
                     this.openPopup();
+                    function onButtonClick() {
+                        alert('Button clicked!');
+                      }
+                      function onButtonClick() {
+                        alert('please see more informations');
+                      }
+                      const button = document.querySelector('button');
+                    button.addEventListener('click', onButtonClick);
                 });
 
                 // Add the marker to the map
